@@ -1,4 +1,4 @@
-# 1 - GGO PoS Analyzer
+# 1 - GGO PoS Machine Learning
 
 ![Build Status][ci-badge]
 
@@ -23,7 +23,7 @@ Ce repository contient le code source du PPoS Machine Learning.
 
 1.  Change directory:
 
-        cd ggo-posanalyzer
+        cd ggo-ppos-ml
 
 1.  Install dependencies:
 
