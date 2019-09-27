@@ -14,8 +14,8 @@ Ce repository contient le code source du PPoS Machine Learning.
 1.  Install the [Google Cloud SDK](https://cloud.google.com/sdk/). (required only if deploy to Google Cloud Plateform)
 
     * After downloading the SDK, initialize it:
-
-        gcloud init
+    
+            gcloud init
 
 1.  Clone the repository:
 
