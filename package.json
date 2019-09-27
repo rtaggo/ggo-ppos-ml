@@ -4,6 +4,7 @@
   "description": "Galigeo Predictive PoS ML",
   "main": "app.js",
   "dependencies": {
+    "@google-cloud/bigquery": "^4.2.1",
     "@google-cloud/logging-winston": "^2.1.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
