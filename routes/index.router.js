@@ -19,4 +19,6 @@ router.get('/alive', cors(), (req, res, next) => {
 
 router.use('/ml', require('../api/ml/ml-api'));
 
+router.use('/insee', require('../api/insee/insee-api'));
+
 module.exports = router;

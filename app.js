@@ -66,6 +66,11 @@ app.get('/', (req, res) => {
   //res.status(200).send('Hello, world!');
 });
 
+app.get('/demo_predict', (req, res) => {
+  res.sendFile(path.join(__dirname, '/views/predict.html'));
+  //res.status(200).send('Hello, world!');
+});
+
 app.use('/api', routesIndexes);
 
 /*
@@ -95,7 +100,7 @@ app.use((err, req, res) => {
 if (module === require.main) {
   // [START server]
   // Start the server
-  const server = app.listen(process.env.PORT || 8080, () => {
+  const server = app.listen(process.env.PORT || 9090, () => {
     console.log(`Welcome to Galigeo REST API App`);
     const port = server.address().port;
     console.log(`App listening on port ${port}`);

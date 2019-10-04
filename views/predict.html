@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Predict Demo</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+    <script src='/scripts/vendors/jquery/jquery-3.3.1.min.js'></script>
+		<script src='/scripts/vendors/d3js/d3.min.js'></script>
+
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.4.0/mapbox-gl.css' rel='stylesheet' />
+
+    <link rel='stylesheet' type='text/css' href='/styles/slds/assets/styles/salesforce-lightning-design-system-vf.css' />
+
+    <link rel='stylesheet' type='text/css' href='/styles/galigeo.css' />
+
+    <script type='module' src='/scripts/galigeo/predict/predict.js'></script>
+</head>
+<body>
+  <div id="map" class=""></div>
+  <div id="appContainer" class="ggoslds">
+    <div class="slds-panel slds-size_medium slds-panel_docked slds-is-open" aria-hidden="false">
+      <div class="slds-panel__body" style="padding: 0.25rem;">
+        <div class="slds-form-element">
+          <div class="slds-form-element__control">
+            <div class="slds-combobox_container">
+              <div id="addrSearch-combobox" class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
+                  <svg class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#search" />
+                  </svg>                                          
+                  <input class="slds-input slds-combobox__input" id="addr-search-input" aria-autocomplete="list" aria-controls="addrAutoCompleteRes" autocomplete="off" role="textbox" type="text" placeholder="Entrer une adresse ... " value="" style="color:#080707;" disabled/>
+                  <span class="slds-icon_container slds-icon-utility-clear slds-input__icon slds-input__icon_right slds-hide">
+                    <svg class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
+                      <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#clear" />
+                    </svg>
+                  </span>
+                </div>
+                <div id="addrAutoCompleteRes" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="slds-box slds-box_xx-small slds-m-top_small">
+          <div id="isochroneDiv">
+            <span>Isochrone de</span>
+            <input id="isochrone-time-range-input" type="number" value="3" min="1" max="30" style="width: 40px;"/>
+            <span> min</span>
+            <span class="slds-icon_container slds-icon_container_circle isochrone-type isochrone-type-active" data-isochonetype="driving-car" title="Isochrone voiture">
+              <svg class="slds-icon slds-icon slds-icon_xx-small" aria-hidden="true">
+                <use xlink:href="/images/svg/symbols.svg#directions_car"></use>
+              </svg>
+              <span class="slds-assistive-text">Description of icon when needed</span>
+            </span>
+            <span class="slds-icon_container slds-icon_container_circle isochrone-type" data-isochonetype="foot-walking" title="Isochrone piéton">
+              <svg class="slds-icon slds-icon slds-icon_xx-small" aria-hidden="true">
+                <use xlink:href="/images/svg/symbols.svg#directions_walk"></use>
+              </svg>
+              <span class="slds-assistive-text">Description of icon when needed</span>
+            </span>
+            <button id="compute-isochrone-btn" class="slds-button slds-button_brand slds-m-left_small" style="padding-left: 0.5rem; padding-right: 0.5rem;">Calculer</button>
+          </div>
+        </div>
+        <div class="slds-box slds-box_x-small slds-hide">
+          <div id="legendAndStatsDiv">
+            <fieldset id="legendContent" class="slds-form-element slds-form-element_compound slds-hide">
+            </fieldset>
+            <fieldset id="zoneDetailsStatsFieldSet" class="slds-form-element slds-form-element_compound slds-hide">
+              <legend class="slds-form-element__legend slds-form-element__label">Statistiques</legend>
+              <div class="slds-form-element__control" id="zoneDetailsStats" class="slds-p-around-xx_small">
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <div class="slds-box slds-box_x-small slds-hide">
+          <div id="ml-container">
+            <legend class="slds-form-element__legend slds-form-element__label" style="display: block;float: unset;">Galigeo Genius</legend>
+            <div class="slds-form-element">
+              <label class="slds-form-element__label" for="combobox-ml-models">Modèles</label>
+              <div class="slds-form-element__control">
+                <div class="slds-combobox_container">
+                  <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                      <input type="text" class="slds-input slds-combobox__input" id="combobox-ml-models" aria-autocomplete="list" aria-controls="listbox-ml-models" autoComplete="off" role="textbox" placeholder="Rechercher un modèle" />
+                      <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
+                        <svg class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default" aria-hidden="true">
+                          <use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                        </svg>
+                      </span>
+                    </div>
+                    <div id="listbox-ml-models" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slds-form slds-form slds-p-around_small">
+              <div class="slds-form-element slds-form-element_horizontal slds-m-bottom_none">
+                <label class="slds-form-element__label" for="ml-models-select">Modèles</label>
+                <div class="slds-form-element__control">
+                  <div class="slds-select_container">
+                    <select class="slds-select" id="ml-models-select" disabled>
+                      <option value="">Please select</option>
+                      <option>Option One</option>
+                      <option>Option Two</option>
+                      <option>Option Three</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div id="ml-model-properties-div" class="slds-form-element slds-hide">
+                <label class="slds-form-element__label">Propriétés</label>
+                <div id="ml-model-properties-div-content"></div>
+              </div>
+              <div id="ml-buttons-div" class="slds-p-top_small slds-hide">
+                <button id="predict-btn" class="slds-button slds-button_neutral slds-button_stretch">
+                  <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                    <use xlink:href="/styles/slds/assets/icons/utility-sprite/svg/symbols.svg#einstein"></use>
+                  </svg>Prediction</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let self = this;
+    $(document).ready(function(e){
+      console.log(' >> document is ready');
+      self.predictApp = new GGO.PredictApp({});      
+      GGO.EventBus.dispatch(GGO.EVENTS.APPISREADY);
+    });
+  </script>
+</body>
+</html>
