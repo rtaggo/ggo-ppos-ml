@@ -36,7 +36,7 @@ router.get('/models', async (req, res, next) => {
     console.log(JSON.stringify(models));
     let resModels = [];
     models.forEach(model => {
-      console.log(model);
+      //console.log(model);
       resModels.push(model.metadata);
     });
     res.json({ models: resModels });
